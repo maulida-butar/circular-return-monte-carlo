@@ -1,16 +1,14 @@
-Product Returns in Circular Supply Chains: Monte Carlo Simulation
-This repository contains the full reproducibility package for the manuscript: "A Monte Carlo Framework for Assessing Economic and Environmental Performance of Product Returns in Circular Supply Chains".
+# Product Returns in Circular Supply Chains: Monte Carlo Simulation
 
-Overview
+This repository contains the full reproducibility package for the manuscript: **"A Monte Carlo Framework for Assessing Economic and Environmental Performance of Product Returns in Circular Supply Chains"**.
+
+## Overview
 This simulation evaluates product returns across five circular supply chain sectors using a stochastic Monte Carlo framework. It calculates Total Cost (TC), Return Cost-Performance Index (RCPI), Material Recovery Rate (MRR), Virgin Material Displacement (VMD), and Carbon Equivalent (CO2e) Avoided over 10,000 iterations.
 
-How to Run the Simulation
-Clone this repository.
+## How to Run the Simulation
+1. Clone this repository to your local machine.
+2. Install the required dependencies: `pip install -r requirements.txt`
+3. Run the main simulation script: `python circular_return_simulation.py`
+4. Run the sensitivity chart generator: `python generate_figure6_sensitivity.py`
 
-Install the required dependencies: pip install -r requirements.txt
-
-Navigate to the code/ directory.
-
-Run the main script: python circular_return_simulation.py
-
-Note: Running the script will automatically generate the summary datasets in the outputs/ folder and the performance charts in the figures/ folder.
+*Note: Running these scripts will automatically generate a new directory named `monte_carlo_outputs/` in this folder, which will contain all the summary CSV datasets and performance charts (Figures 2 to 6) discussed in the manuscript.*
