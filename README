@@ -1,29 +1,16 @@
-# Evaluating Product Returns in Circular Supply Chains: A Reproducible Monte Carlo Framework
+Product Returns in Circular Supply Chains: Monte Carlo Simulation
+This repository contains the full reproducibility package for the manuscript: "A Monte Carlo Framework for Assessing Economic and Environmental Performance of Product Returns in Circular Supply Chains".
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+Overview
+This simulation evaluates product returns across five circular supply chain sectors using a stochastic Monte Carlo framework. It calculates Total Cost (TC), Return Cost-Performance Index (RCPI), Material Recovery Rate (MRR), Virgin Material Displacement (VMD), and Carbon Equivalent (CO2e) Avoided over 10,000 iterations.
 
-## Overview
-This repository contains the complete dataset, parameters, and Python source code required to reproduce the Monte Carlo simulations presented in the paper: **"Evaluating Product Returns in Circular Supply Chains: A Reproducible Monte Carlo Framework for Cost, Recovery, and Virgin Material Displacement."**
+How to Run the Simulation
+Clone this repository.
 
-The simulation framework models reverse supply chain stochasticity using explicitly defined probability distributions (Binomial for return volumes, Beta for recovery yields). It evaluates systemic performance across five sectoral archetypes using four integrated indicators:
-1. **Return Cost-Performance Index (RCPI)**
-2. **Material Recovery Rate (MRR)**
-3. **Virgin Material Displacement (VMD)**
-4. **Carbon Equivalent ($CO_2$) Avoided**
+Install the required dependencies: pip install -r requirements.txt
 
-The outputs of this simulation form the statistical basis for the **Return Absorptive Capacity Typology** (Sunny, Cloudy, Foggy, Rainy) introduced in the paper.
+Navigate to the code/ directory.
 
-## Repository Contents
-* `circular_return_simulation.py` : The main execution script containing the Monte Carlo logic, inventory dynamics, mathematical equations, and visualization algorithms.
-* `README.md` : This documentation file.
+Run the main script: python circular_return_simulation.py
 
-## Prerequisites
-To run the simulation, you need Python 3.8 or higher. The script relies on the following standard data science libraries:
-* `numpy`
-* `pandas`
-* `matplotlib`
-
-You can install the required dependencies using pip:
-```bash
-pip install numpy pandas matplotlib
+Note: Running the script will automatically generate the summary datasets in the outputs/ folder and the performance charts in the figures/ folder.
