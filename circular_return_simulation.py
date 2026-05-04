@@ -451,7 +451,6 @@ def run_monte_carlo(
 
     return summary_df, raw_df, draws
 
-
 # ============================================================
 # 5. Sensitivity analysis
 # ============================================================
@@ -482,7 +481,6 @@ def run_sensitivity_analysis(
     ]
 
     rows = []
-
     baseline_lookup = baseline_summary.set_index("Sector")
 
     for sector in sector_params.keys():
@@ -544,6 +542,136 @@ def run_sensitivity_analysis(
 
     return pd.DataFrame(rows)
 
+
+# ============================================================
+# 6. Plotting functions
+# ============================================================
+
+def plot_rcpi_boxplot(raw_df):
+    plt.figure(figsize=(11, 6))
+    sectors = raw_df["Sector"].unique()
+    data = [
+        raw_df.loc[raw_df["Sector"] == sector, "RCPI"].values
+        for sector in sectors
+    ]
+
+    plt.boxplot(data, tick_labels=sectors, showmeans=True)
+    plt.axhline(0, linestyle="--", linewidth=1)
+    plt.xticks(rotation=30, ha="right")
+    plt.ylabel("RCPI")
+    plt.title("Distribution of RCPI across sectors")
+    plt.tight_layout()
+    plt.savefig(OUTPUT_DIR / "figure_rcpi_boxplot.png", dpi=300)
+    plt.close()
+
+
+def plot_mean_rcpi(summary_df):
+    plt.figure(figsize=(11, 6))
+    x = np.arange(len(summary_df))
+    means = summary_df["Mean_RCPI"].values
+    lower = means - summary_df["RCPI_CI_2.5"].values
+    upper = summary_df["RCPI_CI_97.5"].values - means
+
+    plt.bar(x, means)
+    plt.errorbar(x, means, yerr=[lower, upper], fmt="none", capsize=5)
+    plt.axhline(0, linestyle="--", linewidth=1)
+
+    plt.xticks(x, summary_df["Sector"], rotation=30, ha="right")
+    plt.ylabel("Mean RCPI")
+    plt.title("Mean RCPI with 95% confidence intervals")
+    plt.tight_layout()
+    plt.savefig(OUTPUT_DIR / "figure_mean_rcpi_ci.png", dpi=300)
+    plt.close()
+
+
+def plot_circularity(summary_df):
+    circularity_df = summary_df[["Sector", "Mean_MRR", "Mean_VMD"]].set_index("Sector")
+    ax = circularity_df.plot(kind="bar", figsize=(11, 6))
+    ax.set_ylabel("Indicator value")
+    ax.set_title("Circularity performance: MRR and VMD")
+    ax.legend(["Material Recovery Rate", "Virgin Material Displacement"])
+    plt.xticks(rotation=30, ha="right")
+    plt.tight_layout()
+    plt.savefig(OUTPUT_DIR / "figure_mrr_vmd.png", dpi=300)
+    plt.close()
+
+
+def plot_co2(summary_df):
+    plt.figure(figsize=(11, 6))
+    x = np.arange(len(summary_df))
+    means = summary_df["Mean_CO2_Avoided"].values
+    lower = means - summary_df["CO2_CI_2.5"].values
+    upper = summary_df["CO2_CI_97.5"].values - means
+
+    plt.bar(x, means)
+    plt.errorbar(x, means, yerr=[lower, upper], fmt="none", capsize=5)
+    plt.axhline(0, linestyle="--", linewidth=1)
+
+    plt.xticks(x, summary_df["Sector"], rotation=30, ha="right")
+    plt.ylabel("CO2 equivalent avoided")
+    plt.title("Mean CO2 equivalent avoided with 95% confidence intervals")
+    plt.tight_layout()
+    plt.savefig(OUTPUT_DIR / "figure_co2_avoided.png", dpi=300)
+    plt.close()
+
+
+def plot_sensitivity_tornado(sensitivity_df, sector):
+    # Select relevant parameters for the tornado chart
+    params_to_show = [
+        "virgin_material_cost_per_unit",
+        "recovery_yield_mean",
+        "processing_cost",
+        "transport_cost",
+        "rho_high"
+    ]
+
+    labels = {
+        "virgin_material_cost_per_unit": "Virgin Material Cost",
+        "recovery_yield_mean": "Recovery Yield",
+        "processing_cost": "Processing Cost",
+        "transport_cost": "Transport Cost",
+        "rho_high": "Return Probability"
+    }
+
+    plot_df = sensitivity_df[
+        (sensitivity_df["Sector"] == sector) &
+        (sensitivity_df["Parameter"].isin(params_to_show))
+    ].copy()
+
+    if plot_df.empty:
+        return # Skip if data is missing
+
+    plot_df["Parameter_Label"] = plot_df["Parameter"].map(labels)
+
+    minus_df = plot_df[plot_df["Direction"] == "minus_20_percent"]
+    plus_df = plot_df[plot_df["Direction"] == "plus_20_percent"]
+
+    merged = minus_df[["Parameter", "Parameter_Label", "Delta_RCPI"]].merge(
+        plus_df[["Parameter", "Delta_RCPI"]],
+        on="Parameter",
+        suffixes=("_minus", "_plus")
+    )
+
+    merged["max_abs"] = merged[["Delta_RCPI_minus", "Delta_RCPI_plus"]].abs().max(axis=1)
+    merged = merged.sort_values("max_abs", ascending=True)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    y_pos = np.arange(len(merged))
+
+    ax.barh(y_pos, merged["Delta_RCPI_minus"], align="center", color="coral", label="-20% variation")
+    ax.barh(y_pos, merged["Delta_RCPI_plus"], align="center", color="teal", label="+20% variation")
+
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(merged["Parameter_Label"])
+    ax.set_xlabel("Change in mean RCPI")
+    ax.set_title(f"One-at-a-time sensitivity analysis of RCPI\n{sector}")
+    ax.axvline(0, linewidth=1, color="black")
+    ax.legend()
+
+    plt.tight_layout()
+    safe_name = sector.lower().replace(" ", "_").replace("/", "_")
+    plt.savefig(OUTPUT_DIR / f"figure_sensitivity_{safe_name}.png", dpi=300)
+    plt.close()
 
 # ============================================================
 # 6. Plotting functions
