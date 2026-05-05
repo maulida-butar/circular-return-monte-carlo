@@ -9,6 +9,6 @@ This simulation evaluates product returns across five circular supply chain sect
 1. Clone this repository to your local machine.
 2. Install the required dependencies: `pip install -r requirements.txt`
 3. Run the main simulation script: `python circular_return_simulation.py`
-4. Run the sensitivity chart generator: `python generate_figure6_sensitivity.py`
+4. Run the sensitivity chart generator: `python generate_figure7_sensitivity.py`
 
 *Note: Running these scripts will automatically generate a new directory named `monte_carlo_outputs/` in this folder, which will contain all the summary CSV datasets and performance charts (Figures 2 to 6) discussed in the manuscript.*
