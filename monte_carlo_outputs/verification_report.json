@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "baseline_rows": true,
+    "raw_rows": true,
+    "sensitivity_rows": true,
+    "material_balance": true,
+    "demand_balance": true,
+    "nonpositive_benchmarks_absent": true,
+    "emission_factor_cost_effect_zero": true,
+    "unchanged_zero_parameter_effect_zero": true,
+    "component_cost_reconciliation": true,
+    "source_checksum": true,
+    "defined_raw_statistics_finite": true,
+    "figures_png_svg": true,
+    "all_sensitivity_references_match_baseline": true,
+    "no_nan_sensitivity": true
+  },
+  "max_material_balance_error_units": 9.094947017729282e-13,
+  "max_demand_balance_error_units": 1.5445422718585178e-12,
+  "tests_passed": 13,
+  "baseline_iterations": 10000,
+  "sensitivity_iterations": 10000,
+  "raw_rows": 50000,
+  "sensitivity_cases": 100
+}
